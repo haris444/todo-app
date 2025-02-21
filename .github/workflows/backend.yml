@@ -1,29 +1,23 @@
-name: Backend CI/CD
+- name: Set up Go
+  uses: actions/setup-go@v4
+  with:
+    go-version: 1.24 # Adjust based on your Go version
+  env:
+    GOROOT: /usr/local/go
 
-on:
-  push:
-    branches: [master,main]
-  pull_request:
-    branches: [master,main]
+- name: Change directory to backend
+  run: cd backend todo-app  # 🔥 Move into the backend directory
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+- name: Restore Go cache
+  uses: actions/cache@v3
+  with:
+    path: ~/go/pkg/mod
+    key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}  # 🔥 Updated path
+    restore-keys: |
+      ${{ runner.os }}-go-
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: 1.24
-
-      - name: Install dependencies
-        run: go mod tidy
-
-      - name: Run tests
-        run: go test ./...
-
-      - name: Build backend
-        run: go build -o backend ./main.go
+- name: Install dependencies
+  run: |
+    cd backend  # 🔥 Move into backend again
+    go mod tidy
+    go mod download

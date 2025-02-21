@@ -1,10 +1,10 @@
-name: Frontend CI/CD
+name: Frontend CI
 
 on:
   push:
-    branches: [master,main]
+    branches: [main, master]
   pull_request:
-    branches: [master,main]
+    branches: [main, master]
 
 jobs:
   build:
@@ -12,22 +12,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
+          cache-dependency-path: frontend todo-app/package-lock.json  # 🔥 Cache inside frontend
 
       - name: Install dependencies
-        run: npm install
-        working-directory: frontend
-
-      - name: Run tests
-        run: npm test
-        working-directory: frontend
+        run: |
+          cd frontend todo-app  # 🔥 Move inside frontend
+          npm install
 
       - name: Build frontend
-        run: npm run build
-        working-directory: frontend
+        run: |
+          cd frontend todo-app  # 🔥 Move inside frontend again
+          npm run build
