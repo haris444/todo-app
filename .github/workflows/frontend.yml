@@ -19,27 +19,27 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: frontend todo-app/package-lock.json  # 🔥 Fix path
+          cache-dependency-path: "frontend todo-app/package-lock.json"  # ✅ Fix path
 
       - name: Restore npm cache
         uses: actions/cache@v3
         with:
-          path: frontend/node_modules
+          path: "frontend todo-app/node_modules"  # ✅ Ensure correct cache path
           key: npm-${{ hashFiles('frontend todo-app/package-lock.json') }}
           restore-keys: npm-
 
       - name: Install dependencies
         run: |
-          cd frontend todo-app  # 🔥 Ensure we are in the correct folder
+          cd "frontend todo-app"  # ✅ Handle space in folder name correctly
           npm install
 
       - name: Build frontend
         run: |
-          cd frontend todo-app  # 🔥 Move inside frontend again
+          cd "frontend todo-app"
           npm run build
 
       - name: Upload frontend build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ✅ Upgrade to v4
         with:
           name: frontend-build
-          path: frontend todo-app/dist  # 🔥 Uploads the build folder
+          path: "frontend todo-app/dist"  # ✅ Ensure correct upload path
