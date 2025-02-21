@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="schema">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/to-do-list/.idea/dataSources/7b556565-ca64-494a-a75c-310736397f71/storage_v2/_src_/database/todos_db.EI3Ssg/schema/information_schema.FNRwLQ.zip!/" />
+      <root url="jar://$PROJECT_DIR$/to-do-list/.idea/dataSources/7b556565-ca64-494a-a75c-310736397f71/storage_v2/_src_/database/todos_db.EI3Ssg/schema/pg_catalog.0S1ZNQ.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
