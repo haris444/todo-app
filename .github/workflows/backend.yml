@@ -1,23 +1,49 @@
-- name: Set up Go
-  uses: actions/setup-go@v4
-  with:
-    go-version: 1.24 # Adjust based on your Go version
-  env:
-    GOROOT: /usr/local/go
+name: Backend CI/CD
 
-- name: Change directory to backend
-  run: cd backend todo-app  # 🔥 Move into the backend directory
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
 
-- name: Restore Go cache
-  uses: actions/cache@v3
-  with:
-    path: ~/go/pkg/mod
-    key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}  # 🔥 Updated path
-    restore-keys: |
-      ${{ runner.os }}-go-
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-- name: Install dependencies
-  run: |
-    cd backend  # 🔥 Move into backend again
-    go mod tidy
-    go mod download
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.24
+          cache: true
+
+      - name: Restore Go modules cache
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: go-mod-${{ hashFiles('backend todo-app/go.sum') }}
+          restore-keys: go-mod-
+
+      - name: Install dependencies
+        run: |
+          cd backend todo-app  # 🔥 Ensure we're in backend directory
+          go mod tidy
+
+      - name: Run tests
+        run: |
+          cd backend todo-app  # 🔥 Ensure tests run inside backend
+          go test ./...
+
+      - name: Build backend
+        run: |
+          cd backend todo-app  # 🔥 Ensure build runs inside backend
+          go build -o backend-app ./main.go  # 🔥 Output binary as backend-app
+
+      - name: Upload backend binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-app
+          path: backend todo-app/backend-app

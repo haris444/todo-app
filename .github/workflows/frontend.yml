@@ -12,21 +12,34 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: frontend todo-app/package-lock.json  # 🔥 Cache inside frontend
+          cache-dependency-path: frontend todo-app/package-lock.json  # 🔥 Fix path
+
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: npm-${{ hashFiles('frontend todo-app/package-lock.json') }}
+          restore-keys: npm-
 
       - name: Install dependencies
         run: |
-          cd frontend todo-app  # 🔥 Move inside frontend
+          cd frontend todo-app  # 🔥 Ensure we are in the correct folder
           npm install
 
       - name: Build frontend
         run: |
           cd frontend todo-app  # 🔥 Move inside frontend again
           npm run build
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend todo-app/dist  # 🔥 Uploads the build folder
