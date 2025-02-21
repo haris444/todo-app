@@ -29,21 +29,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend todo-app  # 🔥 Ensure we're in backend directory
+          cd "backend todo-app"  # ✅ Correctly handle spaces in folder name
           go mod tidy
 
       - name: Run tests
         run: |
-          cd backend todo-app  # 🔥 Ensure tests run inside backend
+          cd "backend todo-app"
           go test ./...
 
       - name: Build backend
         run: |
-          cd backend todo-app  # 🔥 Ensure build runs inside backend
-          go build -o backend-app ./main.go  # 🔥 Output binary as backend-app
+          cd "backend todo-app"
+          go build -o backend-app ./main.go  # ✅ Output binary as backend-app
 
       - name: Upload backend binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ✅ Use latest version
         with:
           name: backend-app
           path: backend todo-app/backend-app
